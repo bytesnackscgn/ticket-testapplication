@@ -17,6 +17,31 @@ Die REST-API ist der von [Directus](https://docs.directus.io/reference/filter-ru
 - API-first
 - Monorepo
 
+## Datenbank
+Um das Setup zu erleichtern wurde eine sqlite Datenbank genutz.
+
+Diese wird mittels Knex angesprochen.
+
+### Entitäten/Models/Schema
+
+#### Events
+
+| Field 	| Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `uuid/string(36)` | Bei Erstellung Auto generierte UUID  |
+| `title`      | `string(256)` | Titel der Veranstaltung |
+| `date`      | `date` | Veranstaltungsdatum |
+| `city`      | `string(64)` | Austragungsort |
+
+#### Tickets
+| Field 	| Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `uuid/string(36)` | Bei Erstellung Auto generierte UUID  |
+| `eventId`      | `uuid/string(36)` | M2O relationaler schlüssel aus Events |
+| `barcode`      | `string(8)` | einzigartiger 8 stelliger Barcode  |
+| `firstName`      | `date` | Vorname des Ticketkäufers |
+| `lastName`      | `string(64)` | Nachname des Ticketkäufer |
+
 ## API
 Die API und die Controller sind stark denen aus dem Directus Projekt nachempfunden.
 Jedoch in schlankerer Form. Bspw. entfällt die Ausgabe von 02M/M2M relationalen Objekten.
@@ -29,7 +54,7 @@ Jedoch in schlankerer Form. Bspw. entfällt die Ausgabe von 02M/M2M relationalen
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `Body`      | `JSON` | **Required**. Payload which represents the new item |
+| `Body`	| `JSON` | **Required**. Payload which represents the new item |
 
 ```
   Result Item with all column keys of the selected collection
@@ -152,9 +177,11 @@ db:migrate:dev
 db:seed:dev
 ```
 #### Development
-Starten des dev servers
-Die API ist über http://localhost:3001/api erreichbar;
-Das Frontend ist über http://localhost:5173 erreichbar;
+Starten des dev servers.
+
+Die API ist über http://localhost:3001/api erreichbar.
+
+Das Frontend ist über http://localhost:5173 erreichbar.
 
 ```
 development with watcher: npm run dev
