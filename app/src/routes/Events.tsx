@@ -19,7 +19,7 @@ import { TicketsController } from '../lib/controller/tickets';
 
 export default function Events() {
 	const [events, setEvents] = useState([] as Events[]);
-	const { cms } = useGlobal() as unknown as { cms: { events: EventsController, tickets: TicketsController }};
+	const { cms } = useGlobal() as { cms: { events: EventsController, tickets: TicketsController }};
 
 	const fetchData = async () => {
 		try {
