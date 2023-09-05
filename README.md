@@ -1,4 +1,6 @@
 
+![App Screenshot](https://raw.githubusercontent.com/bytesnackscgn/ticket-testapplication/main/repoimage.png)
+
 # ticket.io-Testapplication
 
 Das Ziel der Testaufgabe war es ein simples Frontend und Backend zu entwickeln, dass eine es ermöglicht die Entitäten TIckets und Events zu verwalten.
