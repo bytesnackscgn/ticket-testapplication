@@ -162,7 +162,11 @@ GET /api/events?filter=filter
 #### Anleitung / Setup
 Klonen der Repository
 
-`git clone https://github.com/bytesnackscgn/ticket-testapplication.git`
+```
+git clone https://github.com/bytesnackscgn/ticket-testapplication.git
+
+cd ticket-testapplication
+'```
 
 #### Single Command Setup
 Das Setup-Script installiert in allen workspaces die erforderlichen Abhängigkeiten. Gefolgt durch das Aufsetzen der sqlite3-Datenbank, Migrationen und Seeds. Die Seed-Scripte erstellen 10 Events und 100 Tickets die randomisiert den jeweiligen Events zugeordnet werden. 
