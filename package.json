@@ -4,17 +4,26 @@
   "description": "ticket.io test task",
   "main": "index.js",
   "scripts": {
-	"dev": "turbo run dev",
-	"build": "turbo run build",
-	"start": "node api/dist/main.js"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "build:dev": "turbo run build:dev",
+    "start": "dotenv -e ./api/.env.production -- node api/dist/src/main.js",
+    "db:migrate": "npm run --workspace api db:migrate",
+    "db:migrate:dev": "npm run --workspace api db:migrate:dev",
+    "db:seed": "npm run --workspace api db:seed",
+    "db:seed:dev": "npm run --workspace api db:seed:dev",
+	"setup": "npm run install-all && npm run setup:db",
+	"setup:db": "npm run db:migrate:dev && npm run db:seed:dev",
+    "install-all": "npm install && npm install -w api && npm install -app"
   },
   "workspaces": [
-	"api",
-	"app"
+    "api",
+    "app"
   ],
   "author": "Georgij Michel",
   "license": "MIT",
   "dependencies": {
+    "dotenv-cli": "^7.3.0",
     "turbo": "^1.10.13"
   }
 }

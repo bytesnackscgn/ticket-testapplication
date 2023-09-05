@@ -19,12 +19,13 @@ import databaseConfig from './config/database';
     ConfigModule.forRoot({
       load: [databaseConfig],
     }),
-	KnexModule,
+    //ConfigModule.forRoot({ envFilePath: `${process.env.NODE_ENV}.env` }),
+    KnexModule,
     //EventsModule,
     //TicketsModule,
-	ServeStaticModule.forRoot({
-		rootPath: join(__dirname, '../../../app/dist'),
-	}),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../../../app/dist'),
+    }),
   ],
   controllers: [AppController, TicketsController, EventsController],
   providers: [AppService, TicketsService, EventsService],

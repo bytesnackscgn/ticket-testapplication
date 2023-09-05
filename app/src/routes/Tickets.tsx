@@ -13,18 +13,21 @@ import Button from '@mui/material/Button';
 
 import { useGlobal } from '../context/global';
 import TableOptions from '../components/TableOptions';
+import type { Tickets, Events } from '../../types'
+import { EventsController } from '../lib/controller/events';
+import { TicketsController } from '../lib/controller/tickets';
 
 export default function Tickets() {
 	const { eventId } = useParams();
-	const { cms } = useGlobal();
+	const { cms } = useGlobal() as unknown as { cms: { events: EventsController, tickets: TicketsController }};
 
-	const [tickets, setTickets] = useState([]);
-	const [event, setEvent] = useState({});
+	const [tickets, setTickets] = useState([] as Tickets[]);
+	const [event, setEvent] = useState({} as Events);
 
 	const fetchEvent = async () => {
 		try {
-			const res = await cms.events.readOne(eventId);
-			setEvent(res);
+			const res = await cms.events.readOne(eventId as string);
+			setEvent(res as Events);
 		} catch (error) {
 			console.error('Error fetching Event data:', error);
 		}
@@ -45,7 +48,7 @@ export default function Tickets() {
 				},
 			});
 
-			setTickets(res);
+			setTickets(res as Tickets[]);
 		} catch (error) {
 			console.error('Error fetching data:', error);
 		}
@@ -68,12 +71,19 @@ export default function Tickets() {
 				<h3>
 					{event.title} in {event.city}
 				</h3>
+				<Link to="/events">
+					<Button variant="contained">Back to Events</Button>
+				</Link>
 				<Link to={`/tickets/${eventId}/new`}>
 					<Button variant="contained">Create new</Button>
 				</Link>
 			</Stack>
+			<div style={{
+				"height": '640px',
+				"overflow": "auto"
+			}}>
 			<TableContainer component={Paper}>
-				<Table sx={{ minWidth: 650 }} aria-label="simple table">
+				<Table sx={{ minWidth: 640 }} aria-label="Ticket table">
 					<TableHead>
 						<TableRow>
 							<TableCell>
@@ -92,9 +102,7 @@ export default function Tickets() {
 					</TableHead>
 					<TableBody>
 						{tickets.map(
-							(
-								row, // Use map instead of forEach
-							) => (
+							(row) => (
 								<TableRow
 									key={row.id}
 									sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -107,8 +115,8 @@ export default function Tickets() {
 									<TableCell align="right">
 										<TableOptions
 											itemType="tickets"
-											eventId={row.eventId}
-											ticketId={row.id}
+											eventId={row.eventId as string}
+											ticketId={row.id as string}
 											emitReloadEvent={fetchData}
 										/>
 									</TableCell>
@@ -118,6 +126,7 @@ export default function Tickets() {
 					</TableBody>
 				</Table>
 			</TableContainer>
+			</div>
 		</>
 	);
 }

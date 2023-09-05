@@ -57,10 +57,9 @@ export class FetchUtil {
 					if (Object.prototype.hasOwnProperty.call(this.payload, key)) {
 						const value = this.payload[key];
 						if (typeof value === 'object') {
-							// If the value is an object, stringify it
 							queryParams.append(key, JSON.stringify(value));
 						} else {
-							queryParams.append(key, value);
+							queryParams.append(key, `${value}`);
 						}
 					}
 				}

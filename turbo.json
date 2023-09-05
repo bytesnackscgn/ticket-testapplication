@@ -13,6 +13,15 @@
 			"outputs": [
 				"dist/**"
 			]
+		},
+		"build:dev": {
+			"dotEnv": [".env.development"],
+			"dependsOn": [
+				"^build"
+			],
+			"outputs": [
+				"dist/**"
+			]
 		}
 	}
 }

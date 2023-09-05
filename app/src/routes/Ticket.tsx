@@ -5,34 +5,39 @@ import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-
+import type { Events, Tickets } from '../../types'
 import { useGlobal } from '../context/global';
+import { ChangeEvent } from 'react';
+import { EventsController } from '../lib/controller/events';
+import { TicketsController } from '../lib/controller/tickets';
 
 export default function Event() {
 	const navigate = useNavigate();
 	const { ticketId, eventId } = useParams();
-	const defaultEvant = {
+	const defaultEvent = {
 		id: '',
 		title: '',
 		city: '',
+		date: ''
 	};
-	const [initialEvent, setInitialEvent] = useState(defaultEvant);
+
+	const [initialEvent, setInitialEvent] = useState(defaultEvent as Events);
 
 	const [ticket, setTicket] = useState({
 		barcode: '10000000',
 		firstName: '',
 		lastName: '',
 		eventId: eventId,
-	});
+	} as Tickets);
 
-	const [events, setEvents] = useState([]);
+	const [events, setEvents] = useState([] as Events[]);
 
-	const { cms } = useGlobal();
+	const { cms } = useGlobal() as unknown as { cms: { events: EventsController, tickets: TicketsController }};
 
 	const fetchEvents = async () => {
 		try {
-			const res = await cms.events.readByQuery({});
-			const filteredInitialEvents = res.filter(el => el.id === eventId);
+			const res = await cms.events.readByQuery({}) as Events[];
+			const filteredInitialEvents: Events[] = res.filter(el => el.id === eventId);
 			if(filteredInitialEvents.length === 1){
 				setInitialEvent(filteredInitialEvents[0]);
 			}
@@ -46,8 +51,8 @@ export default function Event() {
 		if (ticketId === 'new') return;
 
 		try {
-			const res = await cms.tickets.readOne(ticketId);
-			setTicket(res);
+			const res = await cms.tickets.readOne(ticketId as string);
+			setTicket(res as Tickets);
 		} catch (error) {
 			console.error('Error fetching data:', error);
 		}
@@ -58,7 +63,7 @@ export default function Event() {
 		fetchData();
 	}, []);
 
-	const handleFieldChange = (e) => {
+	const handleFieldChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target;
 		setTicket((prevTicket) => ({
 			...prevTicket,
@@ -69,29 +74,29 @@ export default function Event() {
 	const submit = async () => {
 		try {
 			if (ticketId === 'new') {
-				const res = await cms.tickets.createOne(ticket);
+				const res: Tickets = (await cms.tickets.createOne(ticket)) as Tickets;
 				if(res.eventId && res.id){
 					navigate(`/tickets/${res.eventId}/${res.id}`);
 				}else{
-					window.alert(`Error on submission: ${res.message}`);
+					window.alert(`Error on submission: ${res}`);
 				}
 			} else {
-				const res = await cms.tickets.updateOne(ticketId, ticket);
+				const res = await cms.tickets.updateOne(ticketId as string, ticket) as Tickets;
 				if(res.eventId && res.id){
 					setTicket(res);
 				}else{
-					window.alert(`Error on submission: ${res.message}`);
+					window.alert(`Error on submission: ${res}`);
 				}
 			}
-		} catch (error) {
+		} catch (error: unknown) {
 			console.error('Error submit data:', error);
-			window.alert(`Error submit data: ${error.message}`);
+			window.alert(`Error submit data: ${error}`);
 		}
 	};
 
 	const filterEventOptions = createFilterOptions({
 		matchFrom: 'start',
-		stringify: (option) => option.title,
+		stringify: (option: Events) => option.title as string,
 	});
 
 	return (
@@ -103,8 +108,8 @@ export default function Event() {
 				spacing={2}
 				mb={4}
 			>
-				<Link to="/events">
-					<Button variant="contained">Back to Events</Button>
+				<Link to={`/tickets/${eventId}`}>
+					<Button variant="contained">Back to Tickets</Button>
 				</Link>
 				<Button variant="contained" onClick={submit}>
 					Submit
@@ -125,26 +130,30 @@ export default function Event() {
 							id="eventId"
 							value={ initialEvent }
 							inputValue={ initialEvent.title }
-							getOptionLabel={(option) => option.title}
+							getOptionLabel={(option) => {
+								const option_ = option as Events
+								return option_.title as string
+							}}
 							options={events}
 							filterOptions={filterEventOptions}
 							sx={{ width: 300 }}
 							renderInput={(params) => (
 								<TextField {...params} label="Custom filter" />
 							)}
-							onChange={(e, newValue)=>{
+							onChange={(_e, newValue)=>{
 								if(newValue!=null){
+									const newVal = newValue as Events;
 									setTicket((prevTicket) => ({
 										...prevTicket,
-										eventId: newValue.id
+										eventId: newVal.id
 									}));
-									setInitialEvent(newValue)
+									setInitialEvent(newVal)
 								}else{
 									setTicket((prevTicket) => ({
 										...prevTicket,
-										eventId: null
+										eventId: ''
 									}));
-									setInitialEvent(defaultEvant)
+									setInitialEvent(defaultEvent)
 								}
 							}}
 						/>

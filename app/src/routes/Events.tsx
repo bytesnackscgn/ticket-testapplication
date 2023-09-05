@@ -13,15 +13,18 @@ import Button from '@mui/material/Button';
 import { isoToEuropeanDateTime } from '../lib/time';
 import { useGlobal } from '../context/global';
 import TableOptions from '../components/TableOptions';
+import type { Events } from '../../types'
+import { EventsController } from '../lib/controller/events';
+import { TicketsController } from '../lib/controller/tickets';
 
 export default function Events() {
-	const [events, setEvents] = useState([]);
-	const { cms } = useGlobal();
+	const [events, setEvents] = useState([] as Events[]);
+	const { cms } = useGlobal() as unknown as { cms: { events: EventsController, tickets: TicketsController }};
 
 	const fetchData = async () => {
 		try {
 			const res = await cms.events.readByQuery({ sort: 'date' });
-			setEvents(res);
+			setEvents(res as Events[]);
 		} catch (error) {
 			console.error('Error fetching data:', error);
 		}
@@ -44,8 +47,12 @@ export default function Events() {
 					<Button variant="contained">Create new</Button>
 				</Link>
 			</Stack>
+			<div style={{
+				"height": '640px',
+				"overflow": "auto"
+			}}>
 			<TableContainer component={Paper}>
-				<Table sx={{ minWidth: 650 }} aria-label="simple table">
+				<Table sx={{ minWidth: 640 }} aria-label="Event table">
 					<TableHead>
 						<TableRow>
 							<TableCell>
@@ -79,7 +86,7 @@ export default function Events() {
 									<TableCell align="right">
 										<TableOptions
 											itemType="events"
-											eventId={row.id}
+											eventId={row.id as string}
 											emitReloadEvent={fetchData}
 										/>
 									</TableCell>
@@ -89,6 +96,7 @@ export default function Events() {
 					</TableBody>
 				</Table>
 			</TableContainer>
+			</div>
 		</>
 	);
 }

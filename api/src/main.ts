@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-declare const module: any;
 import { AllExceptionsFilter } from './lib/allexeptionFilter';
 
 async function bootstrap() {
@@ -14,7 +13,13 @@ async function bootstrap() {
     optionsSuccessStatus: 204,
   });
   app.setGlobalPrefix('api');
-  app.useGlobalFilters(new AllExceptionsFilter()); 
+  app.useGlobalFilters(new AllExceptionsFilter());
+  console.log(process.env);
+  console.log(
+    'PORT',
+    process.env.PORT,
+    process.env.PORT ? Number.parseInt(process.env.PORT) : 3000,
+  );
   await app.listen(process.env.PORT ? Number.parseInt(process.env.PORT) : 3000);
   /*
   if (module.hot) {

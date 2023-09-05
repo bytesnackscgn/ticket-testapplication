@@ -12,21 +12,25 @@ import './index.css';
 
 const router = createBrowserRouter(routes);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-	<Stack
-	className='vhw-100'
-		direction="column"
-		justifyContent="center"
-		alignItems="center"
-	>
-		<React.StrictMode>
-			<LocalizationProvider dateAdapter={AdapterDayjs}>
-				<GlobalProvider>
-					<div>
-					<RouterProvider router={router} />
-					</div>
-				</GlobalProvider>
-			</LocalizationProvider>
-		</React.StrictMode>
-	</Stack>,
-);
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <Stack
+      className='vhw-100'
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <React.StrictMode>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <GlobalProvider>
+            <div>
+              <RouterProvider router={router} />
+            </div>
+          </GlobalProvider>
+        </LocalizationProvider>
+      </React.StrictMode>
+    </Stack>
+  );
+}

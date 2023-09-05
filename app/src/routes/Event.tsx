@@ -4,10 +4,12 @@ import Stack from '@mui/material/Stack';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { useGlobal } from '../context/global';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import { Events } from '../../types'
+import { EventsController } from '../lib/controller/events';
+import { TicketsController } from '../lib/controller/tickets';
 
 export default function Event() {
 	const navigate = useNavigate();
@@ -16,17 +18,17 @@ export default function Event() {
 	const [event, setEvent] = useState({
 		title: '',
 		city: '',
-		date: new Date().toISOString(),
-	});
+		date: new Date().toISOString()
+	} as Events);
 
-	const { cms } = useGlobal();
+	const { cms } = useGlobal() as unknown as { cms: { events: EventsController, tickets: TicketsController }};
 
 	const fetchData = async () => {
 		if (eventId === 'new') return;
 
 		try {
-			const res = await cms.events.readOne(eventId);
-			setEvent(res);
+			const res = await cms.events.readOne(eventId as string);
+			setEvent(res as Events);
 		} catch (error) {
 			console.error('Error fetching data:', error);
 		}
@@ -35,7 +37,7 @@ export default function Event() {
 		fetchData();
 	}, []);
 
-	const handleFieldChange = (e) => {
+	const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target;
 		setEvent((prevEvent) => ({
 			...prevEvent,
@@ -43,7 +45,9 @@ export default function Event() {
 		}));
 	};
 
-	const handleDateChange = (e) => {
+	const handleDateChange = (e: Dayjs | null) => {
+		if(e === null) return;
+		
 		if (typeof e === 'object') {
 			setEvent((prevEvent) => ({
 				...prevEvent,
@@ -55,11 +59,11 @@ export default function Event() {
 	const submit = async () => {
 		try{
 			if (eventId === 'new') {
-				const res = await cms.events.createOne(event);
+				const res = await cms.events.createOne(event) as Events;
 				navigate(`/events/${res.id}`);
 			}else{
-				const res = await cms.events.updateOne(eventId, event);
-				setEvent(res);
+				const res = await cms.events.updateOne(eventId as string, event);
+				setEvent(res as Events);
 			}
 		}catch(error){
 			console.error('Error submit data:', error);
