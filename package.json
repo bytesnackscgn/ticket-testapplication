@@ -1,0 +1,20 @@
+{
+  "name": "ticket-testapplication",
+  "version": "1.0.0",
+  "description": "ticket.io test task",
+  "main": "index.js",
+  "scripts": {
+	"dev": "turbo run dev",
+	"build": "turbo run build",
+	"start": "node api/dist/main.js"
+  },
+  "workspaces": [
+	"api",
+	"app"
+  ],
+  "author": "Georgij Michel",
+  "license": "MIT",
+  "dependencies": {
+    "turbo": "^1.10.13"
+  }
+}
