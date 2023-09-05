@@ -6,7 +6,7 @@ module.exports = {
 			exec_mode: 'fork',
 			script: './api/dist/src/main.js',
 			env: {
-				CONFIG_PATH: '/home/ticket-testapplication/.env.production',
+				CONFIG_PATH: '/home/ticket-testapplication/api/.env.production',
 				NODE_ENV: 'production',
 			},
 			autorestart: true,
